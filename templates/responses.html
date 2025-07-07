@@ -5,45 +5,143 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #000;
-      color: #fff;
-      padding: 20px;
+      padding: 30px;
+      background-color: #f8f9fa;
     }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .search-container {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .search-container input {
+      padding: 10px;
+      width: 60%;
+      max-width: 400px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
     }
+
     th, td {
-      border: 1px solid #666;
-      padding: 10px;
+      border: 1px solid #ddd;
+      padding: 12px;
       text-align: left;
+      vertical-align: top;
     }
+
     th {
-      background: #222;
+      background-color: #343a40;
+      color: white;
     }
+
     tr:nth-child(even) {
-      background: #111;
+      background-color: #f2f2f2;
+    }
+
+    img {
+      max-width: 150px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .image-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .desc {
+      font-style: italic;
+      font-size: 14px;
+      color: #555;
     }
   </style>
 </head>
 <body>
-  <h1>📋 All Form Submissions</h1>
-  <table>
-    <tr>
-      <th>Timestamp</th>
-      <th>Date</th>
-      <th>Mood</th>
-      <th>Elaboration</th>
-      <th>Song</th>
-    </tr>
-    {% for row in responses %}
-    <tr>
-      {% for cell in row %}
-      <td>{{ cell }}</td>
+
+  <h1>Submitted Responses</h1>
+
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search responses by mood, song, elaboration, description...">
+  </div>
+
+  {% if responses %}
+  <table id="responseTable">
+    <thead>
+      <tr>
+        <th>Timestamp</th>
+        <th>Date</th>
+        <th>Mood</th>
+        <th>Elaboration</th>
+        <th>Song</th>
+        <th>Uploaded Images</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in responses %}
+      <tr>
+        <td>{{ row[0] }}</td>
+        <td>{{ row[1] }}</td>
+        <td>{{ row[2] }}</td>
+        <td>{{ row[3] }}</td>
+        <td>{{ row[4] }}</td>
+        <td>
+          {% if row|length > 5 %}
+            <div class="image-wrapper">
+              {% for i in range(5, row|length, 2) %}
+                {% if row[i] %}
+                  <div>
+                    <img src="{{ url_for('uploaded_file', filename=row[i]) }}" alt="Uploaded Image">
+                    {% if row[i+1] %}
+                      <div class="desc">{{ row[i+1] }}</div>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% else %}
+            No image
+          {% endif %}
+        </td>
+      </tr>
       {% endfor %}
-    </tr>
-    {% endfor %}
+    </tbody>
   </table>
+  {% else %}
+    <p>No responses yet.</p>
+  {% endif %}
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const tableRows = document.querySelectorAll("#responseTable tbody tr");
+
+    searchInput.addEventListener("keyup", function() {
+      const query = searchInput.value.toLowerCase();
+
+      tableRows.forEach(row => {
+        const rowText = row.innerText.toLowerCase();
+        if (rowText.includes(query)) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    });
+  </script>
+
 </body>
 </html>

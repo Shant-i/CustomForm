@@ -92,10 +92,11 @@ def view_responses():
 
     return render_template("responses.html", responses=data)
 
-# Only needed locally for serving uploads
-@app.route('/static/uploads/<filename>')
+
+@app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

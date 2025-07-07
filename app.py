@@ -1,66 +1,101 @@
+import smtplib
+from email.message import EmailMessage
+from flask import Flask, render_template, request, redirect, send_from_directory, url_for
 import os
-from flask import Flask, render_template, request, redirect, url_for
+import csv
+from datetime import datetime
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-
-# Folder to store uploaded files
-UPLOAD_FOLDER = 'static/uploads'
+UPLOAD_FOLDER = os.path.join("static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-# Allowed image extensions
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Max 16 MB
-
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 @app.route("/")
 def form():
+    token = request.args.get("token")
+    if token != "mysecret":
+        return "Unauthorized", 403
     return render_template("form.html")
-
 
 @app.route("/submit", methods=["POST"])
 def submit():
     if request.args.get("token") != "mysecret":
         return "Unauthorized", 403
 
-    # Get form fields
+    # Get form data
     date = request.form.get("date")
     mood = request.form.get("mood")
     elaboration = request.form.get("Elaboration")
     song = request.form.get("Song you're listening to right now")
-    descriptions = request.form.getlist("image_descriptions[]")
 
-    # Process file uploads
+    # Save response to CSV
+    with open('responses.csv', 'a', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow([datetime.now().isoformat(), date, mood, elaboration, song])
+
+    # Send email notification
+    def send_email_notification(date, mood, elaboration, song):
+        msg = EmailMessage()
+        msg['Subject'] = f'📝 New Form Submission on {date}'
+        msg['From'] = 'sourabh.ic.kharche@gmail.com'
+        msg['To'] = 'your_email@gmail.com'  # or any other recipient
+
+        msg.set_content(f"""
+    New Form Submission Received:
+
+    Date: {date}
+    Mood: {mood}
+    Elaboration: {elaboration}
+    Song: {song}
+    """)
+
+        try:
+            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+                smtp.login('sourabh.ic.kharche@gmail.com', 'ymvu pgyf ykem ecga')
+                smtp.send_message(msg)
+            print("Email sent successfully!")
+        except Exception as e:
+            print("Error sending email:", e)
+
+
+    # Handle multiple uploaded files
     uploaded_images = []
-    if 'images[]' in request.files:
-        files = request.files.getlist('images[]')
-        for i, file in enumerate(files):
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(save_path)
-                uploaded_images.append({
-                    "filename": filename,
-                    "description": descriptions[i] if i < len(descriptions) else ""
-                })
+    if 'images' in request.files:
+        images = request.files.getlist("images")
+        descriptions = request.form.getlist("image_descriptions")
 
-    # You can optionally log or save the submission here
-    print("Date:", date)
-    print("Mood:", mood)
-    print("Elaboration:", elaboration)
-    print("Song:", song)
-    print("Images:", uploaded_images)
+        for i, image in enumerate(images):
+            if image.filename != "":
+                filename = secure_filename(image.filename)
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image.save(filepath)
+                uploaded_images.append({
+                    'filename': filename,
+                    'description': descriptions[i] if i < len(descriptions) else ""
+                })
+    
 
     return render_template("thankyou.html", images=uploaded_images)
 
+@app.route("/responses")
+def view_responses():
+    token = request.args.get("token")
+    if token != "1710":  # Simple access control
+        return "Unauthorized", 403
 
-# Required for Render deployment
+    data = []
+    if os.path.exists("responses.csv"):
+        with open("responses.csv", newline='', encoding='utf-8') as f:
+            reader = csv.reader(f)
+            data = list(reader)
+
+    return render_template("responses.html", responses=data)
+
+# Only needed locally for serving uploads
+@app.route('/static/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(debug=True)

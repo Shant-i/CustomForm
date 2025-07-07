@@ -4,9 +4,21 @@
   <title>Styled Feedback Form</title>
   <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
   <style>
+
+.form-container {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 500px;
+  margin: 60px auto;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+  position: relative;
+}
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f8ff;
+      background-color: white;
       padding: 40px;
     }
     form {
@@ -52,25 +64,26 @@
   </div>
 
   <form action="/submit?token=mysecret" method="POST">
-    <label>Name:</label>
-    <input type="text" name="name" required>
+    <label>Date:</label>
+    <input type="text" name="date" required>
 
-    <label>Age:</label>
-    <input type="number" name="age" required>
-
-    <label>Favorite Color:</label>
-    <select name="color">
-      <option value="Red">Red</option>
-      <option value="Blue">Blue</option>
-      <option value="Green">Green</option>
-      <option value="Other">Other</option>
+    <label>Mood:</label><br>
+    <select name="mood">
+      <option value="Feeling Blue">Feeling Blue</option>
+      <option value="Lowk Mad">Lowk Mad</option>
+      <option value="Dissapointed but not sad">Dissapointed but not sad</option>
+      <option value="Kinda Nervous">Kinda Nervous</option>
+      <option value="Excited Nervous">Excited Nervous</option>
+      <option value="Can't wait to wake up tomorrow!">Can't wait to wake up tomorrow!</option>
+      <option value="Content with life :)">Content with life :)</option>
+      <option value="Just so Glad & Grateful">Just so Glad & Grateful</option>
     </select>
 
-    <label>Email:</label>
-    <input type="email" name="email" required>
+    <label>Elaboration:</label>
+    <textarea name="Elaboration" required></textarea>
 
-    <label>Message:</label>
-    <textarea name="message" required></textarea>
+    <label>Song you're listening to right now:</label>
+    <input type="Song you're listening to right now" name="Song you're listening to right now" required>
 
     <button type="submit">Submit</button>
   </form>
@@ -102,24 +115,24 @@
     'hoodiemirrorselfie.png'
   ];
 
-  // How many random images to show (you can change this)
-  const imageCount = 3;
-
   const container = document.getElementById('random-images-container');
 
-  for (let i = 0; i < imageCount; i++) {
+  imageNames.forEach((name, index) => {
     const img = document.createElement('img');
-    const randomIndex = Math.floor(Math.random() * imageNames.length);
-    img.src = `static/${imageNames[randomIndex]}`;
+    img.src = `/static/${name}`;
+    img.alt = `Photo ${index + 1}`;
     img.style.position = 'absolute';
-    img.style.top = `${Math.random() * 80}vh`;
-    img.style.left = `${Math.random() * 80}vw`;
-    img.style.width = '150px';
+    img.style.top = `${Math.random() * 75 + 10}vh`;
+    img.style.left = `${Math.random() * 75 + 10}vw`;
+    img.style.width = '120px';
+    img.style.zIndex = '1';
+    img.style.opacity = '0.8';
     img.style.borderRadius = '12px';
     img.style.boxShadow = '0 0 10px rgba(0,0,0,0.3)';
     container.appendChild(img);
-  }
+  });
 </script>
+
 
 
 </body>

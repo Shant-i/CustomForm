@@ -3,10 +3,7 @@
 <head>
   <title>Styled Feedback Form</title>
   <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
-
-  <!-- ✅ Mobile responsiveness -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <style>
     body {
       margin: 0;
@@ -56,8 +53,17 @@
       font-size: 16px;
     }
 
-    input::placeholder, textarea::placeholder {
-      color: #aaa;
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .upload-section {
+      margin-bottom: 20px;
+      border: 1px dashed #444;
+      padding: 10px;
+      border-radius: 8px;
     }
 
     button {
@@ -76,7 +82,6 @@
       background-color: #e91e63;
     }
 
-    /* ✅ Slider Styles */
     .slider-container {
       width: 100%;
       overflow-x: hidden;
@@ -93,7 +98,6 @@
 
     .slider-track img {
       max-height: 200px;
-      height: auto;
       width: auto;
       border-radius: 12px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -106,7 +110,6 @@
       100% { transform: translateX(-50%); }
     }
 
-    /* ✅ Responsive tweaks */
     @media (max-width: 480px) {
       .form-header h2 {
         font-size: 22px;
@@ -138,11 +141,11 @@
     <h2>TELL ME ABOUT YOUR DAY</h2>
   </div>
 
-  <form action="/submit?token=mysecret" method="POST">
+  <form action="/submit?token=mysecret" method="POST" enctype="multipart/form-data">
     <label>Date:</label>
     <input type="text" name="date" required>
 
-    <label>Mood:</label><br>
+    <label>Mood:</label>
     <select name="mood">
       <option value="Feeling Blue">Feeling Blue</option>
       <option value="Lowk Mad">Lowk Mad</option>
@@ -160,10 +163,28 @@
     <label>Song you're listening to right now:</label>
     <input type="text" name="Song you're listening to right now" required>
 
+    <!-- ✅ Multiple upload blocks -->
+    <div class="upload-section">
+      <label>Upload Image 1:</label>
+      <input type="file" name="photo1" accept="image/*">
+      <input type="text" name="desc1" placeholder="Short description for Image 1">
+    </div>
+
+    <div class="upload-section">
+      <label>Upload Image 2:</label>
+      <input type="file" name="photo2" accept="image/*">
+      <input type="text" name="desc2" placeholder="Short description for Image 2">
+    </div>
+
+    <div class="upload-section">
+      <label>Upload Image 3:</label>
+      <input type="file" name="photo3" accept="image/*">
+      <input type="text" name="desc3" placeholder="Short description for Image 3">
+    </div>
+
     <button type="submit">Submit</button>
   </form>
 
-  <!-- Infinite Image Slider -->
   <div class="slider-container">
     <div class="slider-track" id="sliderTrack">
       <img src="/static/cafepeterdate.png" alt="Cafe Peter">
@@ -184,7 +205,6 @@
   </div>
 
   <script>
-    // Clone slider items for infinite scroll effect
     const slider = document.getElementById('sliderTrack');
     const slides = slider.children;
     const totalSlides = slides.length;

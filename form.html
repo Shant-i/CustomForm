@@ -91,6 +91,36 @@
 <img src="/static/hoodiemirrorselfie.jpg" alt="Image 5"
      style="position: absolute; top: 480px; left: 50%; transform: translateX(-50%) rotate(-2deg); width: 150px; border-radius: 16px;">
 
+<div id="random-images-container"></div>
+
+<script>
+  const imageNames = [
+    'cafepeterdate.jpg',
+    'outsidewestend.jpg',
+    'pizzaexpressdate.jpg',
+    'farewellpic.jpg',
+    'hoodiemirrorselfie.jpg'
+  ];
+
+  // How many random images to show (you can change this)
+  const imageCount = 3;
+
+  const container = document.getElementById('random-images-container');
+
+  for (let i = 0; i < imageCount; i++) {
+    const img = document.createElement('img');
+    const randomIndex = Math.floor(Math.random() * imageNames.length);
+    img.src = `static/${imageNames[randomIndex]}`;
+    img.style.position = 'absolute';
+    img.style.top = `${Math.random() * 80}vh`;
+    img.style.left = `${Math.random() * 80}vw`;
+    img.style.width = '150px';
+    img.style.borderRadius = '12px';
+    img.style.boxShadow = '0 0 10px rgba(0,0,0,0.3)';
+    container.appendChild(img);
+  }
+</script>
+
 
 </body>
 </html>

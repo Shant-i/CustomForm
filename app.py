@@ -1,47 +1,66 @@
-from flask import Flask, render_template, request, redirect, send_from_directory
 import os
+from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = 'uploads'
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+# Folder to store uploaded files
+UPLOAD_FOLDER = 'static/uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Allowed image extensions
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Max 16 MB
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @app.route("/")
 def form():
-    return render_template("form.html")  # Your HTML file should be named 'form.html' and placed in the 'templates' folder
+    return render_template("form.html")
+
 
 @app.route("/submit", methods=["POST"])
 def submit():
+    if request.args.get("token") != "mysecret":
+        return "Unauthorized", 403
+
+    # Get form fields
     date = request.form.get("date")
     mood = request.form.get("mood")
     elaboration = request.form.get("Elaboration")
     song = request.form.get("Song you're listening to right now")
+    descriptions = request.form.getlist("image_descriptions[]")
 
-    photos = []
-    for i in range(1, 4):
-        file = request.files.get(f"photo{i}")
-        desc = request.form.get(f"desc{i}")
-        if file and file.filename:
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
-            photos.append({"filename": filename, "description": desc})
+    # Process file uploads
+    uploaded_images = []
+    if 'images[]' in request.files:
+        files = request.files.getlist('images[]')
+        for i, file in enumerate(files):
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(save_path)
+                uploaded_images.append({
+                    "filename": filename,
+                    "description": descriptions[i] if i < len(descriptions) else ""
+                })
 
-    # Here you can save the data and images to a database or a file
+    # You can optionally log or save the submission here
+    print("Date:", date)
+    print("Mood:", mood)
+    print("Elaboration:", elaboration)
+    print("Song:", song)
+    print("Images:", uploaded_images)
 
-    return redirect("/thankyou")
+    return render_template("thankyou.html", images=uploaded_images)
 
-@app.route("/thankyou")
-def thank_you():
-    return "<h1 style='text-align:center;'>Thank you for your submission! :)</h1>"
 
-@app.route("/uploads/<filename>")
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
+# Required for Render deployment
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)

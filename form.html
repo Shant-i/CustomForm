@@ -9,11 +9,12 @@
       padding: 40px;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: black;
+      color: white;
     }
 
     .form-header {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     .form-header img {
@@ -21,13 +22,20 @@
       margin-bottom: 10px;
     }
 
+    .form-header h2 {
+      font-family: Impact, Charcoal, sans-serif;
+      font-size: 28px;
+      color: white;
+      margin-top: 0;
+    }
+
     form {
-      background: #fff;
+      background: black;
       padding: 20px;
       border-radius: 12px;
       max-width: 500px;
-      margin: auto;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin: 20px auto;
+      box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
     }
 
     input, textarea, select {
@@ -35,57 +43,59 @@
       padding: 10px;
       margin: 8px 0;
       box-sizing: border-box;
+      background-color: #222;
+      color: white;
+      border: 1px solid #444;
+      border-radius: 6px;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #aaa;
     }
 
     button {
-      background-color: #007bff;
+      background-color: #ff4081;
       color: white;
-      padding: 10px 20px;
+      padding: 10px 30px;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      display: block;
+      margin: 20px auto 0 auto;
     }
 
     button:hover {
-      background-color: #0056b3;
+      background-color: #e91e63;
     }
 
     /* Slider Styles */
     .slider-container {
-  width: 100%;
-  overflow: hidden;
-  margin-top: 60px;
-  display: flex;
-  justify-content: center;
-}
+      width: 100%;
+      overflow: hidden;
+      margin-top: 60px;
+      display: flex;
+      justify-content: center;
+    }
 
-.slider-track {
-  display: flex;
-  gap: 20px;
-  animation: scroll 60s linear infinite;
-}
+    .slider-track {
+      display: flex;
+      gap: 20px;
+      animation: scroll 60s linear infinite;
+    }
 
-.slider-track img {
-  max-height: 320px;
-  height: auto;
-  width: auto;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  object-fit: contain;
-  flex-shrink: 0;
-}
+    .slider-track img {
+      max-height: 320px;
+      height: auto;
+      width: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      object-fit: contain;
+      flex-shrink: 0;
+    }
 
-
-    @keyframes slide {
-      0%   { transform: translateX(0); }
-      20%  { transform: translateX(0); }
-      25%  { transform: translateX(-100%); }
-      45%  { transform: translateX(-100%); }
-      50%  { transform: translateX(-200%); }
-      70%  { transform: translateX(-200%); }
-      75%  { transform: translateX(-300%); }
-      95%  { transform: translateX(-300%); }
-      100% { transform: translateX(-400%); }
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
   </style>
 </head>
@@ -93,7 +103,7 @@
 
   <div class="form-header">
     <img src="/static/goofy.png" alt="Logo">
-    <h1>Submit Your Feedback</h1>
+    <h2>TELL ME ABOUT YOUR DAY</h2>
   </div>
 
   <form action="/submit?token=mysecret" method="POST">
@@ -123,38 +133,33 @@
 
   <!-- Image Slider -->
   <div class="slider-container">
-  <div class="slider-track" id="sliderTrack">
-    <img src="/static/cafepeterdate.png" alt="Cafe Peter">
-    <img src="/static/outsidewestend.png" alt="Outside West End">
-    <img src="/static/pizzaexpressdate.png" alt="Pizza Express">
-    <img src="/static/farewellpic.png" alt="Farewell">
-    <img src="/static/hoodiemirrorselfie.png" alt="Mirror Selfie">
-    
-    <img src="/static/EeshaanHouse.png" alt="Eeshaan House">
-    <img src="/static/insidewestend.png" alt="insidewestend">
-    <img src="/static/informalfarewell.png" alt="informalfarewell">
-    <img src="/static/mirrorselfie.png" alt="mirrorselfie">
-    <img src="/static/farewellmirrorselfie.png" alt="farewellmirrorselfie">
-    <img src="/static/illegalimage.png" alt="illegalimage">
-    <img src="/static/farewellcamimage.png" alt="farewellcamimage">
-    <img src="/static/goofy.png" alt="Goofy">
-    <img src="/static/logo.png" alt="Logo">
+    <div class="slider-track" id="sliderTrack">
+      <img src="/static/cafepeterdate.png" alt="Cafe Peter">
+      <img src="/static/outsidewestend.png" alt="Outside West End">
+      <img src="/static/pizzaexpressdate.png" alt="Pizza Express">
+      <img src="/static/farewellpic.png" alt="Farewell">
+      <img src="/static/hoodiemirrorselfie.png" alt="Mirror Selfie">
+      <img src="/static/EeshaanHouse.png" alt="Eeshaan House">
+      <img src="/static/insidewestend.png" alt="Inside West End">
+      <img src="/static/informalfarewell.png" alt="Informal Farewell">
+      <img src="/static/mirrorselfie.png" alt="Mirror Selfie 2">
+      <img src="/static/farewellmirrorselfie.png" alt="Farewell Mirror Selfie">
+      <img src="/static/illegalimage.png" alt="Illegal Image">
+      <img src="/static/farewellcamimage.png" alt="Farewell Cam">
+    </div>
   </div>
-</div>
 
-<script>
-  // Clone slider items to simulate infinite loop
-  const slider = document.getElementById('sliderTrack');
-  const slides = slider.children;
-  const totalSlides = slides.length;
+  <script>
+    const slider = document.getElementById('sliderTrack');
+    const slides = slider.children;
+    const totalSlides = slides.length;
 
-  // Clone each slide once
-  for (let i = 0; i < totalSlides; i++) {
-    const clone = slides[i].cloneNode(true);
-    slider.appendChild(clone);
-  }
-</script>
-
+    // Clone each slide once for infinite scrolling
+    for (let i = 0; i < totalSlides; i++) {
+      const clone = slides[i].cloneNode(true);
+      slider.appendChild(clone);
+    }
+  </script>
 
 </body>
 </html>

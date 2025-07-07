@@ -1,6 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: white;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  #image-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none; /* Prevents clicks on background images */
+  }
+
+  #image-background img {
+    position: absolute;
+    width: 150px;
+    border-radius: 12px;
+    opacity: 0.8;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  }
+
+  .form-container {
+    position: relative;
+    z-index: 5; /* Makes sure the form is above images */
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 500px;
+    margin: 80px auto;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  }
+</style>
+
   <title>Styled Feedback Form</title>
   <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
   <style>
@@ -57,6 +98,9 @@
   </style>
 </head>
 <body>
+
+  <div id="image-background"></div>
+
 
   <div class="form-header">
     <img src="/static/goofy.png" alt="Logo">
@@ -115,23 +159,18 @@
     'hoodiemirrorselfie.png'
   ];
 
-  const container = document.getElementById('random-images-container');
+  const container = document.getElementById('image-background');
 
-  imageNames.forEach((name, index) => {
+  imageNames.forEach((name, i) => {
     const img = document.createElement('img');
     img.src = `/static/${name}`;
-    img.alt = `Photo ${index + 1}`;
-    img.style.position = 'absolute';
-    img.style.top = `${Math.random() * 75 + 10}vh`;
-    img.style.left = `${Math.random() * 75 + 10}vw`;
-    img.style.width = '120px';
-    img.style.zIndex = '1';
-    img.style.opacity = '0.8';
-    img.style.borderRadius = '12px';
-    img.style.boxShadow = '0 0 10px rgba(0,0,0,0.3)';
+    img.alt = `Photo ${i + 1}`;
+    img.style.top = `${10 + Math.random() * 70}vh`;
+    img.style.left = `${10 + Math.random() * 75}vw`;
     container.appendChild(img);
   });
 </script>
+
 
 
 

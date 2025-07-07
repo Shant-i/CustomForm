@@ -6,7 +6,8 @@
     body {
       font-family: Arial, sans-serif;
       padding: 30px;
-      background-color: #f8f9fa;
+      background-color: black;
+      color: white;
     }
 
     h1 {
@@ -33,6 +34,7 @@
       border-collapse: collapse;
       background-color: #fff;
       box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      color: black;
     }
 
     th, td {
@@ -103,11 +105,13 @@
           {% if row|length > 5 %}
             <div class="image-wrapper">
               {% for i in range(5, row|length, 2) %}
-                {% if row[i] %}
+                {% set image_filename = row[i] %}
+                {% set image_description = row[i+1] if i+1 < row|length else '' %}
+                {% if image_filename %}
                   <div>
-                    <img src="{{ url_for('uploaded_file', filename=row[i]) }}" alt="Uploaded Image">
-                    {% if row[i+1] %}
-                      <div class="desc">{{ row[i+1] }}</div>
+                    <img src="{{ url_for('uploaded_file', filename=image_filename) }}" alt="Uploaded Image">
+                    {% if image_description %}
+                      <div class="desc">{{ image_description }}</div>
                     {% endif %}
                   </div>
                 {% endif %}

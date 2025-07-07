@@ -52,33 +52,29 @@
 
     /* Slider Styles */
     .slider-container {
-      width: 100%;
-      overflow: hidden;
-      margin-top: 60px;
-      display: flex;
-      justify-content: center;
-    }
+  width: 100%;
+  overflow: hidden;
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+}
 
-    .slider {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 340px;
-      max-width: 500px;
-      animation: slide 5s infinite;
-    }
+.slider-track {
+  display: flex;
+  gap: 20px;
+  animation: scroll 60s linear infinite;
+}
 
-    .slider img {
-      max-height: 320px;
-      max-width: 100%;
-      height: auto;
-      width: auto;
-      flex-shrink: 0;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      margin: 0 8px;
-      object-fit: contain;
-    }
+.slider-track img {
+  max-height: 320px;
+  height: auto;
+  width: auto;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 
     @keyframes slide {
       0%   { transform: translateX(0); }
@@ -127,14 +123,38 @@
 
   <!-- Image Slider -->
   <div class="slider-container">
-    <div class="slider">
-      <img src="/static/cafepeterdate.png" alt="Cafe Peter">
-      <img src="/static/outsidewestend.png" alt="Outside West End">
-      <img src="/static/pizzaexpressdate.png" alt="Pizza Express">
-      <img src="/static/farewellpic.png" alt="Farewell">
-      <img src="/static/hoodiemirrorselfie.png" alt="Mirror Selfie">
-    </div>
+  <div class="slider-track" id="sliderTrack">
+    <img src="/static/cafepeterdate.png" alt="Cafe Peter">
+    <img src="/static/outsidewestend.png" alt="Outside West End">
+    <img src="/static/pizzaexpressdate.png" alt="Pizza Express">
+    <img src="/static/farewellpic.png" alt="Farewell">
+    <img src="/static/hoodiemirrorselfie.png" alt="Mirror Selfie">
+    
+    <img src="/static/EeshaanHouse.png" alt="Eeshaan House">
+    <img src="/static/insidewestend.png" alt="insidewestend">
+    <img src="/static/informalfarewell.png" alt="informalfarewell">
+    <img src="/static/mirrorselfie.png" alt="mirrorselfie">
+    <img src="/static/farewellmirrorselfie.png" alt="farewellmirrorselfie">
+    <img src="/static/illegalimage.png" alt="illegalimage">
+    <img src="/static/farewellcamimage.png" alt="farewellcamimage">
+    <img src="/static/goofy.png" alt="Goofy">
+    <img src="/static/logo.png" alt="Logo">
   </div>
+</div>
+
+<script>
+  // Clone slider items to simulate infinite loop
+  const slider = document.getElementById('sliderTrack');
+  const slides = slider.children;
+  const totalSlides = slides.length;
+
+  // Clone each slide once
+  for (let i = 0; i < totalSlides; i++) {
+    const clone = slides[i].cloneNode(true);
+    slider.appendChild(clone);
+  }
+</script>
+
 
 </body>
 </html>

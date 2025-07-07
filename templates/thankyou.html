@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Thank You!</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .thank-you-container {
+      text-align: center;
+      max-width: 600px;
+      padding: 30px;
+      background-color: #1c1c1c;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 1.2rem;
+    }
+
+    .uploaded-image {
+      margin-top: 20px;
+    }
+
+    .uploaded-image img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      margin: 10px 0;
+    }
+
+    .description {
+      font-style: italic;
+      color: #ccc;
+    }
+
+    a {
+      color: #00bfff;
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="thank-you-container">
+    <h1>Thank You!</h1>
+    <p>Your submission was received. 🌟</p>
+
+    {% if images %}
+      <div class="uploaded-image">
+        <h2>Uploaded Images</h2>
+        {% for img in images %}
+          <img src="{{ url_for('static', filename='uploads/' + img.filename) }}" alt="Uploaded image">
+          <div class="description">{{ img.description }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <a href="/">← Submit another response</a>
+  </div>
+</body>
+</html>
